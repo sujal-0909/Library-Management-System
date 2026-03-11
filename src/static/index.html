@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-book"></i>
+                <span>Library Management</span>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#" class="nav-link" data-section="dashboard">Dashboard</a>
+                <a href="#" class="nav-link" data-section="books">Books</a>
+                <a href="#" class="nav-link" data-section="borrowings">Borrowings</a>
+                <a href="#" class="nav-link" data-section="fines">Fines</a>
+                <a href="#" class="nav-link" data-section="profile">Profile</a>
+                <a href="#" class="nav-link" id="logout-btn">Logout</a>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login to Library</h2>
+                <span class="close" id="close-login">&times;</span>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <p class="auth-switch">Don't have an account? <a href="#" id="show-register">Register here</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Register New Member</h2>
+                <span class="close" id="close-register">&times;</span>
+            </div>
+            <form id="register-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="register-first-name">First Name</label>
+                        <input type="text" id="register-first-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-last-name">Last Name</label>
+                        <input type="text" id="register-last-name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-phone">Phone</label>
+                    <input type="tel" id="register-phone">
+                </div>
+                <div class="form-group">
+                    <label for="register-address">Address</label>
+                    <textarea id="register-address" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Register</button>
+                <p class="auth-switch">Already have an account? <a href="#" id="show-login">Login here</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+        <!-- Dashboard Section -->
+        <section class="content-section active" id="dashboard-section">
+            <div class="section-header">
+                <h1>Dashboard</h1>
+                <p>Welcome to the Library Management System</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-books">0</h3>
+                        <p>Total Books</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="borrowed-books">0</h3>
+                        <p>Borrowed Books</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="overdue-books">0</h3>
+                        <p>Overdue Books</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="unpaid-fines">$0</h3>
+                        <p>Unpaid Fines</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-content">
+                <div class="dashboard-section">
+                    <h3>Recent Borrowings</h3>
+                    <div class="table-container">
+                        <table id="recent-borrowings-table">
+                            <thead>
+                                <tr>
+                                    <th>Book</th>
+                                    <th>Borrow Date</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="dashboard-section">
+                    <h3>Due Soon</h3>
+                    <div class="table-container">
+                        <table id="due-soon-table">
+                            <thead>
+                                <tr>
+                                    <th>Book</th>
+                                    <th>Due Date</th>
+                                    <th>Days Left</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Books Section -->
+        <section class="content-section" id="books-section">
+            <div class="section-header">
+                <h1>Books</h1>
+                <div class="section-actions">
+                    <button class="btn btn-primary" id="add-book-btn">
+                        <i class="fas fa-plus"></i> Add Book
+                    </button>
+                </div>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <input type="text" id="book-search" placeholder="Search books...">
+                    <select id="category-filter">
+                        <option value="">All Categories</option>
+                    </select>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="available-only">
+                        Available Only
+                    </label>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="books-table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Category</th>
+                            <th>Available</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="pagination" id="books-pagination"></div>
+        </section>
+
+        <!-- Borrowings Section -->
+        <section class="content-section" id="borrowings-section">
+            <div class="section-header">
+                <h1>Borrowings</h1>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="active-borrowings-only">
+                        Active Only
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="overdue-borrowings-only">
+                        Overdue Only
+                    </label>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="borrowings-table">
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Member</th>
+                            <th>Borrow Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="pagination" id="borrowings-pagination"></div>
+        </section>
+
+        <!-- Fines Section -->
+        <section class="content-section" id="fines-section">
+            <div class="section-header">
+                <h1>Fines</h1>
+            </div>
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="unpaid-fines-only">
+                        Unpaid Only
+                    </label>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table id="fines-table">
+                    <thead>
+                        <tr>
+                            <th>Member</th>
+                            <th>Book</th>
+                            <th>Amount</th>
+                            <th>Reason</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="pagination" id="fines-pagination"></div>
+        </section>
+
+        <!-- Profile Section -->
+        <section class="content-section" id="profile-section">
+            <div class="section-header">
+                <h1>Profile</h1>
+            </div>
+
+            <div class="profile-content">
+                <div class="profile-card">
+                    <div class="profile-info">
+                        <h3 id="profile-name">Loading...</h3>
+                        <p id="profile-email">Loading...</p>
+                        <p id="profile-member-since">Loading...</p>
+                    </div>
+                    <button class="btn btn-secondary" id="edit-profile-btn">Edit Profile</button>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Active Borrowings:</span>
+                        <span class="stat-value" id="profile-active-borrowings">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Borrowed:</span>
+                        <span class="stat-value" id="profile-total-borrowed">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Unpaid Fines:</span>
+                        <span class="stat-value" id="profile-unpaid-fines">$0</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Book Modal -->
+    <div class="modal" id="add-book-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Book</h2>
+                <span class="close" id="close-add-book">&times;</span>
+            </div>
+            <form id="add-book-form">
+                <div class="form-group">
+                    <label for="book-title">Title *</label>
+                    <input type="text" id="book-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="book-author">Author *</label>
+                    <input type="text" id="book-author" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="book-isbn">ISBN</label>
+                        <input type="text" id="book-isbn">
+                    </div>
+                    <div class="form-group">
+                        <label for="book-category">Category</label>
+                        <input type="text" id="book-category">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="book-publisher">Publisher</label>
+                        <input type="text" id="book-publisher">
+                    </div>
+                    <div class="form-group">
+                        <label for="book-year">Publication Year</label>
+                        <input type="number" id="book-year" min="1000" max="2024">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="book-copies">Total Copies</label>
+                        <input type="number" id="book-copies" min="1" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="book-location">Shelf Location</label>
+                        <input type="text" id="book-location">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Book</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
