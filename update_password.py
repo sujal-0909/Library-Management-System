@@ -10,7 +10,7 @@ hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8
 connection = pymysql.connect(
     host='localhost',
     user='root',
-    password='sujal179',
+    password='password',
     database='library_management'
 )
 
