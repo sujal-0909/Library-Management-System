@@ -180,17 +180,6 @@ Update database configuration in:
 
 ```
 src/config.py
-```
-
-Example:
-
-```
-DB_HOST = "localhost"
-DB_USER = "root"
-DB_PASSWORD = "yourpassword"
-DB_NAME = "library_db"
-```
-
 ---
 
 7️⃣ Run the Application
